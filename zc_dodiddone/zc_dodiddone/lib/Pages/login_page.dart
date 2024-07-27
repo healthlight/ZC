@@ -52,12 +52,48 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  _isLogin ? 'Вход' : 'Регистрация',
-                  style: const TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset('assets/zero_coder.png'),
+                      const SizedBox(width: 10),
+                      // White text Zerocoder
+                      Text(
+                        'Zerocoder',
+                        style: const TextStyle(
+                          fontSize: 60,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: 40),
+                // Название приложения с RichText
+                RichText(
+                  text: TextSpan(
+                    style: const TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    children: [
+                      TextSpan(
+                        text: 'do',
+                        style: TextStyle(
+                          color: DoDidDoneTheme.lightTheme.colorScheme.primary,
+                        ),
+                      ),
+                      TextSpan(
+                        text: '-did-',
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                      TextSpan(
+                        text: 'done',
+                        style: TextStyle(
+                          color: DoDidDoneTheme.lightTheme.colorScheme.secondary,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 const SizedBox(height: 40),
@@ -134,8 +170,9 @@ class _LoginPageState extends State<LoginPage> {
                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const MainPage()));
                   },
                   style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
                     backgroundColor: 
-                    _isLogin ? DoDidDoneTheme.lightTheme.colorScheme.secondary :  DoDidDoneTheme.lightTheme.colorScheme.primary,
+                    _isLogin ? DoDidDoneTheme.lightTheme.colorScheme.primary :  DoDidDoneTheme.lightTheme.colorScheme.secondary,
                     padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                     textStyle: const TextStyle(fontSize: 18),
                     shape: RoundedRectangleBorder(
