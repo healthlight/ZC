@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zc_dodiddone/Pages/main_page.dart';
 import 'package:zc_dodiddone/Theme/theme.dart';
 
 class LoginPage extends StatefulWidget {
@@ -101,34 +102,36 @@ class _LoginPageState extends State<LoginPage> {
                   },
                 ),
                 const SizedBox(height: 20),
-                TextFormField(
-                  controller: _confirmPasswordController, // Используем новый контроллер
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    hintText: 'Повторить пароль', // Новая подсказка
-                    filled: true,
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
+
+                // Условие для отображения поля "Повторить пароль"
+                if (!_isLogin) // Отображаем только при _isLogin == true
+                  
+                  TextFormField(
+                    controller: _confirmPasswordController, // Используем новый контроллер
+                    obscureText: true,
+                    decoration: const InputDecoration(
+                      hintText: 'Повторить пароль', // Новая подсказка
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                      ),
                     ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Пожалуйста, повторите пароль';
+                      }
+                      if (value != _passwordController.text) {
+                        return 'Пароли не совпадают';
+                      }
+                      return null;
+                    },
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Пожалуйста, повторите пароль';
-                    }
-                    if (value != _passwordController.text) {
-                      return 'Пароли не совпадают';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 40),
+                  const SizedBox(height: 40),
+
                 ElevatedButton(
                   onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      // Обработка входа или регистрации
-                      // ...
-                    }
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const MainPage()));
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: 

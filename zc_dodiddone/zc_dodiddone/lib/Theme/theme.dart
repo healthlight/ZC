@@ -15,5 +15,11 @@ class DoDidDoneTheme {
         foregroundColor: Colors.white, // Set button text color to white
       ),
     ),
+    // Customize the BottomNavigationBar theme
+    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+      selectedItemColor: const Color(0xFF9F7BF6), // Primary color for selected icons
+      unselectedItemColor: Colors.grey, // Grey color for unselected icons
+      backgroundColor: Colors.transparent, // Прозрачный BottomNavigationBar
+    ),
   );
 }
