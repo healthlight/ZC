@@ -11,9 +11,11 @@ class DoDidDoneTheme {
     useMaterial3: true,
     // Customize the ElevatedButton style
     elevatedButtonTheme: ElevatedButtonThemeData(
-      style: ElevatedButton.styleFrom(
-        foregroundColor: Colors.white, // Set button text color to white
-      ),
+      style: ButtonStyle(
+        backgroundColor: WidgetStateProperty.all<Color>(
+          const Color(0xFF4ceb8b), // Цвет фона кнопок
+        ),
+      )
     ),
     // Customize the BottomNavigationBar theme
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
