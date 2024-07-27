@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zc_dodiddone/Screens/all_screens.dart';
 import 'package:zc_dodiddone/Screens/profile.dart';
 import 'package:zc_dodiddone/Theme/theme.dart';
 
@@ -13,7 +14,7 @@ class _MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
 
   static const List<Widget> _widgetOptions = <Widget>[
-    Text('Задачи'),
+    TaskPage(),
     Text('Сегодня'),
     Text('Выполнено'),
     ProfilePage(),
