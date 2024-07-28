@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:zc_dodiddone/Pages/main_page.dart';
 import 'package:zc_dodiddone/Theme/theme.dart';
+import 'package:zc_dodiddone/services/firebace_auth.dart'; // Импортируем AuthService
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -16,6 +17,7 @@ class _LoginPageState extends State<LoginPage> {
   final _confirmPasswordController = TextEditingController();
 
   bool _isLogin = true; // Flag to indicate login or registration
+  final AuthService _authService = AuthService(); // Создаем объект AuthService
 
   @override
   void dispose() {
@@ -56,16 +58,16 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset('assets/zero_coder.png'),
-                      const SizedBox(width: 10),
-                      // White text Zerocoder
-                      Text(
-                        'Zerocoder',
-                        style: const TextStyle(
-                          fontSize: 60,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
+                    const SizedBox(width: 10),
+                    // White text Zerocoder
+                    Text(
+                      'Zerocoder',
+                      style: const TextStyle(
+                        fontSize: 60,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
                       ),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 40),
@@ -111,7 +113,9 @@ class _LoginPageState extends State<LoginPage> {
                     if (value == null || value.isEmpty) {
                       return 'Пожалуйста, введите адрес электронной почты';
                     }
-                    if (!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$").hasMatch(value)) {
+                    if (!RegExp(
+                            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$")
+                        .hasMatch(value)) {
                       return 'Некорректный адрес электронной почты';
                     }
                     return null;
@@ -141,9 +145,9 @@ class _LoginPageState extends State<LoginPage> {
 
                 // Условие для отображения поля "Повторить пароль"
                 if (!_isLogin) // Отображаем только при _isLogin == true
-                  
                   TextFormField(
-                    controller: _confirmPasswordController, // Используем новый контроллер
+                    controller: _confirmPasswordController,
+                    // Используем новый контроллер
                     obscureText: true,
                     decoration: const InputDecoration(
                       hintText: 'Повторить пароль', // Новая подсказка
@@ -163,22 +167,82 @@ class _LoginPageState extends State<LoginPage> {
                       return null;
                     },
                   ),
-                  const SizedBox(height: 40),
+                const SizedBox(height: 40),
 
                 ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const MainPage()));
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      if (_isLogin) {
+                        // Вход в систему
+                        final userCredential =
+                            await _authService.signInWithEmailAndPassword(
+                          _usernameController.text,
+                          _passwordController.text,
+                        );
+                        if (userCredential != null) {
+                          // Успешный вход
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const MainPage(),
+                            ),
+                          );
+                        } else {
+                          // Ошибка входа
+                          // Выведите сообщение об ошибке
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Ошибка входа'),
+                            ),
+                          );
+                        }
+                      } else {
+                        // Регистрация
+                        final userCredential =
+                            await _authService.registerWithEmailAndPassword(
+                          _usernameController.text,
+                          _passwordController.text,
+                        );
+                        if (userCredential != null) {
+                          // Успешная регистрация
+                          // Отправьте запрос на подтверждение почты
+                          await _authService.sendEmailVerification();
+                          // Выведите сообщение об успешной регистрации
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Регистрация успешна'),
+                              
+                            )
+                          );              
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const MainPage(),
+                            ),            
+                          );
+                        } else {
+                          // Ошибка регистрации
+                          // Выведите сообщение об ошибке
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Ошибка регистрации'),
+                            ),
+                          );
+                        }
+                      }
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
-                    backgroundColor: 
-                    _isLogin ? DoDidDoneTheme.lightTheme.colorScheme.primary :  DoDidDoneTheme.lightTheme.colorScheme.secondary,
-                    padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                    backgroundColor: _isLogin
+                        ? DoDidDoneTheme.lightTheme.colorScheme.primary
+                        : DoDidDoneTheme.lightTheme.colorScheme.secondary,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 50, vertical: 15),
                     textStyle: const TextStyle(fontSize: 18),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
-
                   ),
                   child: Text(_isLogin ? 'Войти' : 'Зарегистрироваться'),
                 ),
@@ -190,7 +254,9 @@ class _LoginPageState extends State<LoginPage> {
                     });
                   },
                   child: Text(
-                    _isLogin?'У меня еще нет аккаунта...': 'Уже есть аккаунт...',
+                    _isLogin
+                        ? 'У меня еще нет аккаунта...'
+                        : 'Уже есть аккаунт...',
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 16,

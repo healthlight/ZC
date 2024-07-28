@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:zc_dodiddone/services/firebace_auth.dart'; // Импортируем AuthService
 import '../pages/login_page.dart';
+
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
+
   @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
+
 class _ProfilePageState extends State<ProfilePage> {
-  bool isEmailVerified = false; // Флаг для проверки подтверждения почты
+  final AuthService _authService = AuthService(); // Создаем объект AuthService
+
   @override
   Widget build(BuildContext context) {
+    final user = _authService.getCurrentUser(); // Получаем текущего пользователя
+
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Column(
@@ -18,22 +25,24 @@ class _ProfilePageState extends State<ProfilePage> {
           // Аватар
           CircleAvatar(
             radius: 50,
-            backgroundImage: const AssetImage(
-                'assets/_1.png'), // Замените на реальный путь к аватару
+            backgroundImage: user?.photoURL != null
+                ? NetworkImage(user!.photoURL!) // Используем URL аватара, если он есть
+                : const AssetImage('assets/_1.png'), // Иначе используем дефолтный аватар
           ),
           const SizedBox(height: 20),
           // Почта
           Text(
-            'example@email.com', // Замените на реальную почту пользователя
+            user?.email ?? 'example@email.com', // Используем email пользователя, если он есть
             style: const TextStyle(fontSize: 18),
           ),
           const SizedBox(height: 10),
           // Кнопка подтверждения почты (отображается, если почта не подтверждена)
-          if (!isEmailVerified)
+          if (!user!.emailVerified)
             ElevatedButton(
-              onPressed: () {
-                // Обработка отправки запроса подтверждения почты
-                // Например, можно показать диалог с сообщением о том, что письмо отправлено
+              onPressed: () async {
+                // Отправляем запрос на подтверждение почты
+                await _authService.sendEmailVerification();
+                // Показываем диалог с сообщением о том, что письмо отправлено
                 showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
@@ -42,7 +51,11 @@ class _ProfilePageState extends State<ProfilePage> {
                         'Письмо с подтверждением отправлено на ваш адрес.'),
                     actions: [
                       TextButton(
-                        onPressed: () => Navigator.pop(context),
+                        onPressed: () => Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const LoginPage()),
+                        ),
                         child: const Text('OK'),
                       ),
                     ],
@@ -54,13 +67,14 @@ class _ProfilePageState extends State<ProfilePage> {
           const SizedBox(height: 20),
           // Кнопка выхода из профиля
           ElevatedButton(
-            onPressed: () {
-              // Обработка выхода из профиля
-              // Например, можно перейти на страницу входа
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) {
-                return const LoginPage();
-              }));
+            onPressed: () async {
+              // Выходим из системы
+              await _authService.signOut();
+              // Переходим на страницу входа
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginPage()),
+              );
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red, // Красный цвет для кнопки выхода

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "744046088822",
+    "project_id": "zc-dodiddone-e1beb",
+    "storage_bucket": "zc-dodiddone-e1beb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:744046088822:android:a8092ff59aefe9ab9d0557",
+        "android_client_info": {
+          "package_name": "com.example.zc_dodiddone"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAeGZexI0WrlJkZa8ugW_WSJJZiIYpzjrs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
