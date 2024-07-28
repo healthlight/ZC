@@ -26,30 +26,32 @@ class _TaskPageState extends State<TaskPage> {
           return const Center(child: CircularProgressIndicator());
         }
 
+
         // Проверяем, есть ли данные в snapshot
-        if (snapshot.hasData) {
-          final tasks = snapshot.data!.docs;
+        final tasks = snapshot.data!.docs;
 
-          return ListView.builder(
-                    itemCount: tasks.length,
-                    itemBuilder: (context, index) {
-                      final taskData = tasks[index].data() as Map<String, dynamic>;
-                      final taskTitle = taskData['title'] as String;
-                      final taskDescription = taskData['description'] as String;
-                      final taskDeadline =
-                          (taskData['deadline'] as Timestamp).toDate();
-
-                      return TaskItem(
-                        title: taskTitle,
-                        description: taskDescription,
-                        deadline: taskDeadline,
-                      );
-                    },
-          );
-        } else {
-          // Если данных нет, отображаем сообщение
-          return const Center(child: Text('Нет задач'));
+        if (tasks.isEmpty) {
+          return const Center(child: Text('Нет задач, время отдыхать\n или создай задачу!'));
         }
+
+
+        return ListView.builder(
+                  itemCount: tasks.length,
+                  itemBuilder: (context, index) {
+                    final taskData = tasks[index].data() as Map<String, dynamic>;
+                    final taskTitle = taskData['title'];
+                    final taskDescription = taskData['description'];
+                    final taskDeadline =
+                        (taskData['deadline'] as Timestamp).toDate();
+
+                    return TaskItem(
+                      title: taskTitle,
+                      description: taskDescription,
+                      deadline: taskDeadline,
+                    );
+                  },
+        );
+        
       },
     );
   }

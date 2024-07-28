@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:zc_dodiddone/Screens/all_tasks.dart';
 import 'package:zc_dodiddone/Screens/profile.dart';
@@ -146,16 +147,67 @@ class _MainPageState extends State<MainPage> {
                   children: [
                     TextButton(
                       onPressed: () {
+                        // Обработка cansel задачи
+                        // ...
                         Navigator.of(context).pop();
                       },
                       child: const Text('Отмена'),
                     ),
                     const SizedBox(width: 10), // Отступ между кнопками
                     TextButton(
-                      onPressed: () {
-                        // Обработка добавления задачи
-                        // ...
-                        Navigator.of(context).pop();
+                      
+                      onPressed: () async {
+                        // Получаем данные из контроллеров
+                        final title = _titleController.text;
+                        final description = _descriptionController.text;
+                        final deadline = _selectedDateTime;
+
+                        // Проверяем, что все поля заполнены
+                        if (title.isEmpty ||
+                            description.isEmpty ||
+                            deadline == null) {
+                          // Отображаем сообщение об ошибке
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Заполните все поля'),
+                            ),
+                          );
+                          return;
+                        }
+
+                        // Добавляем задачу в Firestore
+                        try {
+                          print('try to add task');
+                          await FirebaseFirestore.instance
+                              .collection('tasks')
+                              .add({
+                            'title': title,
+                            'description': description,
+                            'deadline': Timestamp.fromDate(deadline),
+                          });
+
+                          // Очищаем контроллеры
+                          _titleController.clear();
+                          _descriptionController.clear();
+                          _deadlineController.clear();
+                          _selectedDateTime = null;
+
+                          // Закрываем диалоговое окно
+                          Navigator.of(context).pop();
+
+                          // Отображаем сообщение об успешном добавлении
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Задача добавлена'),
+                            ),
+                          );
+                        } catch (e) {
+                          // Обработка ошибки добавления
+                          print('Ошибка добавления задачи: $e');
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Ошибка добавления: $e')),
+                          );
+                        }
                       },
                       child: const Text('Добавить'),
                     ),
