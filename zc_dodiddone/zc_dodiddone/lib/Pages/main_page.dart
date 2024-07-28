@@ -1,9 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:zc_dodiddone/Screens/all_tasks.dart';
+import 'package:zc_dodiddone/Screens/completed.dart';
 import 'package:zc_dodiddone/Screens/profile.dart';
 import 'package:zc_dodiddone/Theme/theme.dart';
-import 'package:intl/intl.dart'; // Импортируем intl для работы с датой
+import 'package:intl/intl.dart';
+
+import '../Screens/for_today.dart'; // Импортируем intl для работы с датой
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -17,8 +20,8 @@ class _MainPageState extends State<MainPage> {
 
   static const List<Widget> _widgetOptions = <Widget>[
     TaskPage(),
-    Text('Сегодня'),
-    Text('Выполнено'),
+    ForTodayPage(),
+    CompletedPage(),
     ProfilePage(),
   ];
 
@@ -184,6 +187,8 @@ class _MainPageState extends State<MainPage> {
                             'title': title,
                             'description': description,
                             'deadline': Timestamp.fromDate(deadline),
+                            'completed': false,
+                            'is_for_today': false,
                           });
 
                           // Очищаем контроллеры

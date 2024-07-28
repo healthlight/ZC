@@ -33,18 +33,18 @@ class TaskItem extends StatelessWidget {
     return Dismissible(
       key: Key(title), // Уникальный ключ для Dismissible
       background: Container(
-        color: Colors.red,
-        alignment: Alignment.centerRight,
+        color: Colors.green,
+        alignment: Alignment.centerLeft,
         child: const Icon(
-          Icons.delete,
+          Icons.arrow_forward,
           color: Colors.white,
         ),
       ),
       secondaryBackground: Container(
         color: Colors.blue,
-        alignment: Alignment.centerLeft,
+        alignment: Alignment.centerRight,
         child: const Icon(
-          Icons.edit,
+          Icons.arrow_back,
           color: Colors.white,
         ),
       ),

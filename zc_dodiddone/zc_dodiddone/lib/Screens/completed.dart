@@ -2,14 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:zc_dodiddone/Widgets/task_item.dart';
 
-class TaskPage extends StatefulWidget {
-  const TaskPage({Key? key}) : super(key: key);
+class CompletedPage extends StatefulWidget {
+  const CompletedPage
+({Key? key}) : super(key: key);
 
   @override
-  State<TaskPage> createState() => _TaskPageState();
+  State<CompletedPage
+> createState() => _TaskPageState();
 }
 
-class _TaskPageState extends State<TaskPage> {
+class _TaskPageState extends State<CompletedPage> {
   final CollectionReference _tasksCollection =
       FirebaseFirestore.instance.collection('tasks');
 
@@ -39,7 +41,7 @@ class _TaskPageState extends State<TaskPage> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: _tasksCollection.where('completed', isEqualTo: false).where('is_for_today', isEqualTo: false).
+      stream: _tasksCollection.where('completed', isEqualTo: true).
       snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
@@ -107,12 +109,12 @@ class _TaskPageState extends State<TaskPage> {
                 to_left: (){
                   _tasksCollection
                   .doc(tasks[index].id)
-                  .update({'completed': true});
+                  .update({'is_for_today': true, 'completed': false});
                 }, 
                 to_right: (){
                   _tasksCollection
                   .doc(tasks[index].id)
-                  .update({'is_for_today': true});
+                  .update({'is_for_today': false, 'completed': false});
                 },
               ),
             );
