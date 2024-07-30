@@ -85,6 +85,12 @@ class TaskItem extends StatelessWidget {
                   // Добавляем кнопки "Выполнено" и "Редактировать" в заголовок
                   IconButton(
                     onPressed: () {
+                      onDelete.call(); // Вызываем onDelete при нажатии на кнопку удаления
+                    },
+                    icon: const Icon(Icons.delete),
+                  ),
+                  IconButton(
+                    onPressed: () {
                       // Обработка нажатия на кнопку "Выполнено"
                       // Например, можно удалить задачу из списка
                       print('Задача выполнена!');
