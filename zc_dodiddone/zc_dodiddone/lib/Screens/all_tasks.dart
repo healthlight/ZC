@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:zc_dodiddone/Widgets/task_item.dart';
+import 'package:zc_dodiddone/Widgets/dialog_widget.dart';
 
 class TaskPage extends StatefulWidget {
   const TaskPage({Key? key}) : super(key: key);
@@ -99,7 +100,20 @@ class _TaskPageState extends State<TaskPage> {
                 deadline: taskDeadline,
                 
                 onEdit: () {
-                  _editTask(taskId); // Вызываем _editTask при нажатии на кнопку редактирования
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      
+                      return DialogWidget(
+                        title: taskTitle,
+                        description: taskDescription,
+                        deadline: taskDeadline,
+                        taskId: taskId,
+                        isEditing: true,
+                      );
+                    },
+                  );
+                  // _editTask(taskId); // Вызываем _editTask при нажатии на кнопку редактирования
                 },
                 onDelete: () {
                   _deleteTask(taskId); // Вызываем _deleteTask при нажатии на кнопку удаления
