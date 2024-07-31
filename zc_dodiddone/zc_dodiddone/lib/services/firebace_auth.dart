@@ -62,4 +62,20 @@ class AuthService {
     // Возвращаем текущего пользователя, если он авторизован
     return _auth.currentUser;
   }
+
+  // Метод для обновления профиля пользователя
+  Future<void> updateProfile({required String photoURL}) async {
+    try {
+      // Получаем текущего пользователя
+      final user = _auth.currentUser;
+      if (user != null) {
+        // Обновляем аватар пользователя
+        await user.updatePhotoURL(photoURL);
+      }
+    } catch (e) {
+      print('Ошибка обновления профиля: $e');
+      // Можно добавить обработку ошибки, например, показать сообщение пользователю
+    }
+  }
+
 }
